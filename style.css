@@ -1,52 +1,72 @@
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', sans-serif;
   background: #e0f7fa;
   margin: 0;
   padding: 20px;
   color: #01579b;
-  text-align: center;
 }
 
 h1 {
+  text-align: center;
   margin-bottom: 30px;
 }
 
 #malla {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-  max-width: 1200px;
-  margin: auto;
+  flex-direction: column;
+  gap: 40px;
+  padding: 0 20px;
 }
 
+/* Estilo por semestre */
+.semestre {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-start;
+  border-left: 5px solid #81d4fa;
+  padding: 10px 0 0 10px;
+}
+
+.semestre h2 {
+  flex-basis: 100%;
+  margin-bottom: 10px;
+  color: #0277bd;
+}
+
+/* Estilos por año */
+.año1 .ramo { background: #b3e5fc; border-color: #4fc3f7; }
+.año2 .ramo { background: #b2ebf2; border-color: #4dd0e1; }
+.año3 .ramo { background: #b3ffff; border-color: #4dd0e1; }
+.año4 .ramo { background: #b2dfdb; border-color: #4db6ac; }
+.año5 .ramo { background: #c5cae9; border-color: #7986cb; }
+
 .ramo {
-  background: #b3e5fc;
-  border: 2px solid #4fc3f7;
-  border-radius: 10px;
-  padding: 12px 18px;
-  width: 200px;
+  border: 2px solid;
+  border-radius: 8px;
+  padding: 12px;
+  width: 220px;
   text-align: center;
-  font-weight: 600;
+  font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
   user-select: none;
 }
 
 .ramo:hover {
-  background: #81d4fa;
-  transform: scale(1.03);
+  background-color: #81d4fa;
+  transform: scale(1.05);
 }
 
 .ramo.activo {
-  background: #0288d1;
+  background: #0288d1 !important;
   color: white;
-  border-color: #01579b;
+  border-color: #01579b !important;
 }
 
 .ramo.bloqueado {
-  background: #cfd8dc;
-  color: #607d8b;
-  border-color: #90a4ae;
+  background: #cfd8dc !important;
+  color: #607d8b !important;
+  border-color: #90a4ae !important;
   cursor: not-allowed;
 }
