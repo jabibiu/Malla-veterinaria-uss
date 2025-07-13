@@ -1,13 +1,719 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Malla Curricular Interactiva</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malla Curricular Veterinaria Interactiva</title>
+    <style>
+        :root {
+            --primary: #1e88e5;
+            --primary-light: #64b5f6;
+            --primary-dark: #0d47a1;
+            --secondary: #4fc3f7;
+            --accent: #80deea;
+            --text: #333;
+            --light: #f5f9ff;
+            --border: #90caf9;
+            --approved: #4caf50;
+            --locked: #e0e0e0;
+            --hover: #bbdefb;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #e3f2fd;
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .instructions {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .instructions h2 {
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .progress-container {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .progress-bar {
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-light), var(--primary));
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .curriculum {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+        
+        .year {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .year-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .year-title {
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            flex-grow: 1;
+        }
+        
+        .semesters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .semester {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 20px;
+            flex: 1;
+            min-width: 300px;
+            border: 2px solid var(--border);
+            transition: all 0.3s;
+        }
+        
+        .semester:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .semester-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+            font-size: 1.4rem;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--border);
+        }
+        
+        .courses {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        
+        .course {
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        
+        .course:hover {
+            transform: scale(1.02);
+        }
+        
+        .course.locked {
+            background: var(--locked);
+            color: #9e9e9e;
+            cursor: not-allowed;
+        }
+        
+        .course.unlocked {
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+            color: white;
+            cursor: pointer;
+        }
+        
+        .course.approved {
+            background: linear-gradient(135deg, var(--approved), #81c784);
+            color: white;
+        }
+        
+        .course-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+        
+        .course-requirements {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            font-style: italic;
+            margin-top: 8px;
+        }
+        
+        .course-status {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 0.8rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        
+        .course-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        .legend-locked {
+            background: var(--locked);
+        }
+        
+        .legend-unlocked {
+            background: var(--primary-light);
+        }
+        
+        .legend-approved {
+            background: var(--approved);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .semesters {
+                flex-direction: column;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div id="curriculum-map"></div>
-  <div id="course-details"></div>
-  <script src="script.js"></script>
+    <div class="container">
+        <header>
+            <h1>🏫 Malla Curricular Veterinaria Interactiva</h1>
+            <p>Haz clic en los cursos para aprobarlos y desbloquear sus requisitos. ¡Planifica tu camino académico!</p>
+        </header>
+        
+        <div class="instructions">
+            <h2>Instrucciones de uso</h2>
+            <ul>
+                <li>Los cursos en <strong>gris</strong> están bloqueados hasta que apruebes sus requisitos</li>
+                <li>Los cursos en <strong>celeste</strong> están disponibles para aprobar</li>
+                <li>Los cursos en <strong>verde</strong> ya han sido aprobados</li>
+                <li>Haz clic en un curso disponible para marcarlo como aprobado</li>
+                <li>Usa los botones para reiniciar o aprobar todos los cursos</li>
+            </ul>
+        </div>
+        
+        <div class="controls">
+            <button id="resetBtn">↺ Reiniciar Todo</button>
+            <button id="approveAllBtn">✓ Aprobar Todos</button>
+            <button id="unapproveAllBtn">✗ Desaprobar Todos</button>
+        </div>
+        
+        <div class="progress-container">
+            <h3>Progreso Académico: <span id="progressText">0%</span></h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+        
+        <div class="curriculum" id="curriculum">
+            <!-- La malla curricular se generará dinámicamente con JavaScript -->
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color legend-locked"></div>
+                <span>Bloqueado</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color legend-unlocked"></div>
+                <span>Disponible</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color legend-approved"></div>
+                <span>Aprobado</span>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Malla Curricular Interactiva - Carrera de Veterinaria | Desarrollado con ❤️</p>
+        </footer>
+    </div>
+
+    <script>
+        // Datos de la malla curricular
+        const curriculumData = [
+            // Primer Año
+            {
+                year: "Primer Año",
+                semesters: [
+                    {
+                        id: "I",
+                        courses: [
+                            { id: "bio_celular", name: "Biología celular", requirements: [], opens: ["bioquimica", "anatomia_I", "histologia", "genetica_ganadera"] },
+                            { id: "quimica", name: "Química general y orgánica", requirements: [], opens: ["bioquimica"] },
+                            { id: "fisica", name: "Física médica", requirements: [], opens: ["metodos_diagnostico"] },
+                            { id: "matematicas", name: "Matemáticas", requirements: [], opens: ["genetica_ganadera", "economia"] },
+                            { id: "orientacion", name: "Orientación profesional", requirements: [], opens: ["bienestar_animal"] },
+                            { id: "estrategias", name: "Estrategias para el aprendizaje", requirements: [], opens: [] }
+                        ]
+                    },
+                    {
+                        id: "II",
+                        courses: [
+                            { id: "bioquimica", name: "Bioquímica general", requirements: ["bio_celular", "quimica"], opens: ["fisiologia_animal", "microbiologia"] },
+                            { id: "anatomia_I", name: "Anatomía veterinaria I", requirements: ["bio_celular"], opens: ["anatomia_II"] },
+                            { id: "histologia", name: "Histología veterinaria", requirements: ["bio_celular"], opens: ["fisiologia_animal", "inmunologia"] },
+                            { id: "zoologia", name: "Zoología veterinaria", requirements: [], opens: ["ecologia", "enfermedades_parasitarias"] },
+                            { id: "bienestar_animal", name: "Bienestar Animal", requirements: ["orientacion"], opens: ["fisiologia_animal", "inmunologia_animal", "sistemas_carne"] },
+                            { id: "ingles_I", name: "Inglés instrumental I", requirements: [], opens: ["ingles_II"] }
+                        ]
+                    }
+                ]
+            },
+            // Segundo Año
+            {
+                year: "Segundo Año",
+                semesters: [
+                    {
+                        id: "III",
+                        courses: [
+                            { id: "antropologia", name: "Antropología", requirements: [], opens: ["etica"] },
+                            { id: "ecologia", name: "Ecología", requirements: ["zoologia"], opens: ["produccion_forrajes", "conservacion_silvestre"] },
+                            { id: "fisiologia_animal", name: "Fisiología animal", requirements: ["bioquimica", "histologia", "bienestar_animal"], opens: ["fisiopatologia", "reproduccion_animal", "enfermedades_infecciosas", "patologia_general"] },
+                            { id: "anatomia_II", name: "Anatomía veterinaria II", requirements: ["anatomia_I"], opens: ["fisiopatologia", "reproduccion_animal", "patologia_general"] },
+                            { id: "microbiologia", name: "Microbiología", requirements: ["bioquimica"], opens: ["enfermedades_infecciosas"] },
+                            { id: "inmunologia", name: "Inmunología veterinaria", requirements: ["histologia", "bienestar_animal"], opens: ["fisiopatologia", "enfermedades_infecciosas"] },
+                            { id: "genetica_ganadera", name: "Genética ganadera", requirements: ["matematicas", "bio_celular"], opens: ["sistemas_carne", "sistemas_leche"] },
+                            { id: "ingles_II", name: "Inglés instrumental II", requirements: ["ingles_I"], opens: [] }
+                        ]
+                    },
+                    {
+                        id: "IV",
+                        courses: [
+                            { id: "etica", name: "Ética", requirements: ["antropologia"], opens: ["filosofia_economia"] },
+                            { id: "produccion_forrajes", name: "Producción de forrajes", requirements: ["ecologia"], opens: ["nutricion_animal", "sistemas_carne", "economia"] },
+                            { id: "fisiopatologia", name: "Fisiopatología", requirements: ["fisiologia_animal", "anatomia_II", "inmunologia"], opens: ["farmacologia_I", "andrologia"] },
+                            { id: "reproduccion_animal", name: "Reproducción animal", requirements: ["fisiologia_animal", "anatomia_II"], opens: ["andrologia", "sistemas_carne", "sistemas_leche", "sistemas_peces"] },
+                            { id: "enfermedades_parasitarias", name: "Enfermedades parasitarias", requirements: ["zoologia"], opens: ["farmacologia_II"] },
+                            { id: "enfermedades_infecciosas", name: "Enfermedades infecciosas", requirements: ["fisiologia_animal", "microbiologia", "inmunologia"], opens: ["farmacologia_I", "epidemiologia"] },
+                            { id: "patologia_general", name: "Patología general", requirements: ["fisiologia_animal", "anatomia_II"], opens: ["patologia_especial"] }
+                        ]
+                    }
+                ]
+            },
+            // Tercer Año
+            {
+                year: "Tercer Año",
+                semesters: [
+                    {
+                        id: "V",
+                        courses: [
+                            { id: "filosofia_economia", name: "Filosofía de la economía", requirements: ["etica"], opens: [] },
+                            { id: "nutricion_animal", name: "Nutrición y alimentación animal", requirements: ["produccion_forrajes"], opens: ["sistemas_leche", "sistemas_peces"] },
+                            { id: "patologia_especial", name: "Patología especial de sistemas", requirements: ["patologia_general"], opens: ["cirugia_general", "exploracion_clinica"] },
+                            { id: "farmacologia_I", name: "Farmacología veterinaria I", requirements: ["fisiopatologia", "enfermedades_infecciosas"], opens: ["cirugia_general", "farmacologia_II"] },
+                            { id: "andrologia", name: "Andrología", requirements: ["fisiopatologia", "reproduccion_animal"], opens: ["ginecologia"] },
+                            { id: "sistemas_carne", name: "Sistemas de producción de carne", requirements: ["genetica_ganadera", "bienestar_animal", "reproduccion_animal", "produccion_forrajes"], opens: ["tecnologia_carne"] },
+                            { id: "economia", name: "Economía", requirements: ["matematicas", "produccion_forrajes"], opens: ["contabilidad"] }
+                        ]
+                    },
+                    {
+                        id: "VI",
+                        courses: [
+                            { id: "cirugia_general", name: "Cirugía general", requirements: ["patologia_especial", "farmacologia_I"], opens: ["cirugia_especial"] },
+                            { id: "farmacologia_II", name: "Farmacología veterinaria II", requirements: ["enfermedades_parasitarias", "farmacologia_I"], opens: ["cirugia_especial", "toxicologia"] },
+                            { id: "sistemas_leche", name: "Sistemas de producción de leche", requirements: ["genetica_ganadera", "reproduccion_animal", "nutricion_animal"], opens: ["tecnologia_leche"] },
+                            { id: "tecnologia_carne", name: "Tecnología de la carne", requirements: ["sistemas_carne"], opens: ["tecnologia_leche"] },
+                            { id: "ginecologia", name: "Ginecología y obstetricia", requirements: ["andrologia"], opens: ["exploracion_clinica"] },
+                            { id: "contabilidad", name: "Contabilidad y administración", requirements: ["economia"], opens: ["analisis_estadistico", "formulacion_proyectos"] }
+                        ]
+                    }
+                ]
+            },
+            // Cuarto Año
+            {
+                year: "Cuarto Año",
+                semesters: [
+                    {
+                        id: "VII",
+                        courses: [
+                            { id: "cirugia_especial", name: "Cirugía especial", requirements: ["cirugia_general", "farmacologia_II"], opens: ["medicina_interna"] },
+                            { id: "exploracion_clinica", name: "Exploración clínica de los animales", requirements: ["patologia_especial", "ginecologia"], opens: ["metodos_diagnostico", "medicina_interna"] },
+                            { id: "analisis_estadistico", name: "Análisis estadístico", requirements: ["contabilidad"], opens: ["metodologia_investigacion", "epidemiologia"] },
+                            { id: "sistemas_peces", name: "Sistemas de producción de peces", requirements: ["reproduccion_animal", "nutricion_animal"], opens: [] },
+                            { id: "tecnologia_leche", name: "Tecnología de la leche", requirements: ["sistemas_leche", "tecnologia_carne"], opens: ["inocuidad_alimentos"] },
+                            { id: "conservacion_silvestre", name: "Conservación de la vida silvestre", requirements: ["ecologia"], opens: ["clinica_silvestres"] }
+                        ]
+                    },
+                    {
+                        id: "VIII",
+                        courses: [
+                            { id: "toxicologia", name: "Toxicología veterinaria", requirements: ["farmacologia_II"], opens: ["clinica_silvestres", "clinica_equinos", "clinica_compania", "inocuidad_alimentos"] },
+                            { id: "metodos_diagnostico", name: "Métodos complementarios de diagnóstico", requirements: ["fisica", "exploracion_clinica"], opens: ["clinica_silvestres", "clinica_equinos", "clinica_compania", "inocuidad_alimentos"] },
+                            { id: "medicina_interna", name: "Medicina interna", requirements: ["cirugia_especial", "exploracion_clinica"], opens: [] },
+                            { id: "metodologia_investigacion", name: "Metodología de la investigación científica", requirements: ["analisis_estadistico"], opens: [] },
+                            { id: "epidemiologia", name: "Epidemiologia y salud pública", requirements: ["enfermedades_infecciosas", "analisis_estadistico"], opens: ["inocuidad_alimentos"] },
+                            { id: "formulacion_proyectos", name: "Formulación y evaluación de proyectos", requirements: ["contabilidad"], opens: [] }
+                        ]
+                    }
+                ]
+            },
+            // Quinto Año
+            {
+                year: "Quinto Año",
+                semesters: [
+                    {
+                        id: "IX",
+                        courses: [
+                            { id: "clinica_silvestres", name: "Clínica de animales silvestres y exóticos", requirements: ["conservacion_silvestre", "toxicologia", "metodos_diagnostico"], opens: ["electivo"] },
+                            { id: "clinica_equinos", name: "Clínica de equinos y rumiantes", requirements: ["toxicologia", "metodos_diagnostico"], opens: ["electivo"] },
+                            { id: "clinica_compania", name: "Clínica de animales de compañía", requirements: ["toxicologia", "metodos_diagnostico"], opens: ["electivo"] },
+                            { id: "legislacion", name: "Legislación y deontología", requirements: ["Epidemiologia y salud publica"], opens: [] },
+                            { id: "memoria_titulo", name: "Memoria de título", requirements: ["VIII"], opens: [] },
+                            { id: "inocuidad_alimentos", name: "Inocuidad de los alimentos", requirements: ["tecnologia_leche", "epidemiologia", "toxicologia", "metodos_diagnostico"], opens: [] }
+                        ]
+                    },
+                    {
+                        id: "X",
+                        courses: [
+                            { id: "electivo", name: "Electivo", requirements: ["clinica_silvestres", "clinica_equinos", "clinica_compania"], opens: [] },
+                            { id: "internado", name: "Internado", requirements: ["IX"], opens: [] }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // Estado de la aplicación
+        let approvedCourses = new Set();
+        const totalCourses = curriculumData.reduce((total, year) => {
+            return total + year.semesters.reduce((sum, semester) => sum + semester.courses.length, 0);
+        }, 0);
+
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', () => {
+            initCurriculum();
+            updateProgress();
+            
+            // Event listeners para los botones de control
+            document.getElementById('resetBtn').addEventListener('click', resetAllCourses);
+            document.getElementById('approveAllBtn').addEventListener('click', approveAllCourses);
+            document.getElementById('unapproveAllBtn').addEventListener('click', unapproveAllCourses);
+            
+            // Cargar estado guardado si existe
+            const savedState = localStorage.getItem('vetCurriculumState');
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                approvedCourses = new Set(state.approvedCourses);
+                updateCurriculumDisplay();
+                updateProgress();
+            }
+        });
+
+        // Función para inicializar la malla curricular
+        function initCurriculum() {
+            const curriculumEl = document.getElementById('curriculum');
+            curriculumEl.innerHTML = '';
+            
+            curriculumData.forEach(yearData => {
+                const yearEl = document.createElement('div');
+                yearEl.className = 'year';
+                
+                const yearHeader = document.createElement('div');
+                yearHeader.className = 'year-header';
+                yearHeader.innerHTML = `<h2 class="year-title">${yearData.year}</h2>`;
+                yearEl.appendChild(yearHeader);
+                
+                const semestersContainer = document.createElement('div');
+                semestersContainer.className = 'semesters';
+                
+                yearData.semesters.forEach(semester => {
+                    const semesterEl = document.createElement('div');
+                    semesterEl.className = 'semester';
+                    
+                    const semesterTitle = document.createElement('h3');
+                    semesterTitle.className = 'semester-title';
+                    semesterTitle.textContent = `Semestre ${semester.id}`;
+                    semesterEl.appendChild(semesterTitle);
+                    
+                    const coursesContainer = document.createElement('div');
+                    coursesContainer.className = 'courses';
+                    
+                    semester.courses.forEach(course => {
+                        const courseEl = document.createElement('div');
+                        courseEl.className = 'course locked';
+                        courseEl.dataset.id = course.id;
+                        
+                        const requirements = course.requirements.map(req => {
+                            const reqCourse = findCourseById(req);
+                            return reqCourse ? reqCourse.name : req;
+                        }).join(', ');
+                        
+                        const opens = course.opens.map(op => {
+                            const opCourse = findCourseById(op);
+                            return opCourse ? opCourse.name : op;
+                        }).join(', ');
+                        
+                        courseEl.innerHTML = `
+                            <div class="course-title">${course.name}</div>
+                            <div class="course-info">
+                                <span>${course.requirements.length > 0 ? 'Requisitos: ' + requirements : 'Sin requisitos'}</span>
+                            </div>
+                            ${opens ? `<div class="course-requirements">Abre: ${opens}</div>` : ''}
+                            <div class="course-status">Bloqueado</div>
+                        `;
+                        
+                        courseEl.addEventListener('click', () => toggleCourseApproval(course.id));
+                        coursesContainer.appendChild(courseEl);
+                    });
+                    
+                    semesterEl.appendChild(coursesContainer);
+                    semestersContainer.appendChild(semesterEl);
+                });
+                
+                yearEl.appendChild(semestersContainer);
+                curriculumEl.appendChild(yearEl);
+            });
+            
+            updateCurriculumDisplay();
+        }
+
+        // Actualizar la visualización de la malla
+        function updateCurriculumDisplay() {
+            curriculumData.forEach(yearData => {
+                yearData.semesters.forEach(semester => {
+                    semester.courses.forEach(course => {
+                        const courseEl = document.querySelector(`.course[data-id="${course.id}"]`);
+                        if (!courseEl) return;
+                        
+                        // Determinar si el curso está aprobado
+                        const isApproved = approvedCourses.has(course.id);
+                        
+                        // Determinar si el curso está desbloqueado (todos sus requisitos aprobados)
+                        const isUnlocked = course.requirements.every(req => approvedCourses.has(req));
+                        
+                        // Actualizar clases y estado
+                        courseEl.classList.remove('locked', 'unlocked', 'approved');
+                        courseEl.classList.add(isApproved ? 'approved' : isUnlocked ? 'unlocked' : 'locked');
+                        
+                        // Actualizar el texto de estado
+                        const statusEl = courseEl.querySelector('.course-status');
+                        if (statusEl) {
+                            statusEl.textContent = isApproved ? 'Aprobado' : isUnlocked ? 'Disponible' : 'Bloqueado';
+                        }
+                    });
+                });
+            });
+        }
+
+        // Alternar la aprobación de un curso
+        function toggleCourseApproval(courseId) {
+            const course = findCourseById(courseId);
+            if (!course) return;
+            
+            // Verificar si el curso está desbloqueado
+            const isUnlocked = course.requirements.every(req => approvedCourses.has(req));
+            if (!isUnlocked) return;
+            
+            if (approvedCourses.has(courseId)) {
+                approvedCourses.delete(courseId);
+            } else {
+                approvedCourses.add(courseId);
+            }
+            
+            updateCurriculumDisplay();
+            updateProgress();
+            saveState();
+        }
+
+        // Reiniciar todos los cursos
+        function resetAllCourses() {
+            if (confirm('¿Estás seguro de que quieres reiniciar todo el progreso?')) {
+                approvedCourses.clear();
+                updateCurriculumDisplay();
+                updateProgress();
+                saveState();
+            }
+        }
+
+        // Aprobar todos los cursos
+        function approveAllCourses() {
+            curriculumData.forEach(yearData => {
+                yearData.semesters.forEach(semester => {
+                    semester.courses.forEach(course => {
+                        approvedCourses.add(course.id);
+                    });
+                });
+            });
+            updateCurriculumDisplay();
+            updateProgress();
+            saveState();
+        }
+
+        // Desaprobar todos los cursos
+        function unapproveAllCourses() {
+            if (confirm('¿Estás seguro de que quieres marcar todos los cursos como no aprobados?')) {
+                approvedCourses.clear();
+                updateCurriculumDisplay();
+                updateProgress();
+                saveState();
+            }
+        }
+
+        // Actualizar la barra de progreso
+        function updateProgress() {
+            const progress = (approvedCourses.size / totalCourses) * 100;
+            const progressText = document.getElementById('progressText');
+            const progressFill = document.getElementById('progressFill');
+            
+            progressText.textContent = `${Math.round(progress)}%`;
+            progressFill.style.width = `${progress}%`;
+        }
+
+        // Guardar el estado actual
+        function saveState() {
+            const state = {
+                approvedCourses: Array.from(approvedCourses)
+            };
+            localStorage.setItem('vetCurriculumState', JSON.stringify(state));
+        }
+
+        // Buscar un curso por ID
+        function findCourseById(courseId) {
+            for (const yearData of curriculumData) {
+                for (const semester of yearData.semesters) {
+                    const course = semester.courses.find(c => c.id === courseId);
+                    if (course) return course;
+                }
+            }
+            return null;
+        }
+    </script>
 </body>
 </html>
