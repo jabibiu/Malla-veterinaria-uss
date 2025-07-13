@@ -84,14 +84,14 @@
             gap: 25px;
             padding: 10px 0;
             overflow-x: auto;
-            min-height: 600px;
+            min-height: 500px;
         }
         
         .year-container {
             display: flex;
             flex-direction: column;
             gap: 25px;
-            min-width: 300px;
+            min-width: 250px;
         }
         
         .year-header {
@@ -111,41 +111,41 @@
             background: var(--light);
             border-radius: 10px;
             padding: 15px;
-            min-width: 280px;
+            min-width: 230px;
             border: 2px solid var(--border);
             transition: all 0.3s;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
         
         .semester-title {
             text-align: center;
             color: var(--primary-dark);
-            font-size: 1.3rem;
-            padding-bottom: 10px;
+            font-size: 1.2rem;
+            padding-bottom: 8px;
             border-bottom: 2px dashed var(--border);
         }
         
         .courses {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 12px;
+            gap: 10px;
         }
         
         .course {
-            padding: 12px;
+            padding: 10px;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
             border: 1px solid var(--border);
-            min-height: 120px;
+            min-height: 80px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: center;
         }
         
         .course:hover {
@@ -172,31 +172,20 @@
         
         .course-title {
             font-weight: 600;
-            margin-bottom: 5px;
-            font-size: 1rem;
-        }
-        
-        .course-requirements {
-            font-size: 0.8rem;
-            opacity: 0.9;
-            font-style: italic;
-            margin-top: 8px;
+            text-align: center;
+            font-size: 0.9rem;
+            padding: 0 5px;
         }
         
         .course-status {
             position: absolute;
-            top: 8px;
-            right: 8px;
-            font-size: 0.75rem;
+            top: 5px;
+            right: 5px;
+            font-size: 0.7rem;
             background: rgba(255, 255, 255, 0.3);
-            padding: 2px 8px;
+            padding: 2px 6px;
             border-radius: 10px;
             font-weight: bold;
-        }
-        
-        .course-info {
-            font-size: 0.85rem;
-            margin-top: 5px;
         }
         
         .legend {
@@ -244,12 +233,6 @@
             font-weight: bold;
         }
         
-        .requirements-info {
-            font-size: 0.75rem;
-            font-style: italic;
-            margin-top: 5px;
-        }
-        
         /* Scroll personalizado */
         .curriculum::-webkit-scrollbar {
             height: 12px;
@@ -267,6 +250,14 @@
         
         .curriculum::-webkit-scrollbar-thumb:hover {
             background: var(--primary-dark);
+        }
+        
+        /* Indicador de scroll */
+        .scroll-indicator {
+            text-align: center;
+            margin-top: 10px;
+            color: var(--primary-dark);
+            font-style: italic;
         }
     </style>
 </head>
@@ -286,6 +277,8 @@
             <!-- La malla curricular se generará dinámicamente con JavaScript -->
         </div>
         
+        <div class="scroll-indicator">← Desplázate horizontalmente para ver todos los semestres →</div>
+        
         <div class="legend">
             <div class="legend-item">
                 <div class="legend-color legend-locked"></div>
@@ -302,7 +295,7 @@
         </div>
         
         <footer>
-            <p>Malla Curricular Interactiva - Carrera de Veterinaria USS | Diseñado con 💖</p>
+            <p>Malla Curricular Interactiva - Carrera de Veterinaria USS</p>
         </footer>
     </div>
 
@@ -522,26 +515,8 @@
                         courseEl.className = 'course locked';
                         courseEl.dataset.id = course.id;
                         
-                        const requirements = course.requirements.map(req => {
-                            const reqCourse = findCourseById(req);
-                            return reqCourse ? reqCourse.name : req;
-                        }).join(', ');
-                        
-                        const opens = course.opens.map(op => {
-                            const opCourse = findCourseById(op);
-                            return opCourse ? opCourse.name : op;
-                        }).join(', ');
-                        
                         courseEl.innerHTML = `
-                            <div>
-                                <div class="course-title">${course.name}</div>
-                                <div class="course-info">
-                                    ${course.requirements.length > 0 ? 
-                                        `<div class="requirements-info">Requisitos: ${requirements}</div>` : 
-                                        '<div class="requirements-info">Sin requisitos</div>'}
-                                </div>
-                                ${opens ? `<div class="course-requirements">Abre: ${opens}</div>` : ''}
-                            </div>
+                            <div class="course-title">${course.name}</div>
                             <div class="course-status">Bloqueado</div>
                         `;
                         
