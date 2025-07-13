@@ -1,1 +1,214 @@
+const ramosPorSemestre = {
+  "Semestre I": {
+    año: "año1",
+    ramos: [
+      "Biología celular",
+      "Química general y orgánica",
+      "Física médica",
+      "Matemáticas",
+      "Orientación profesional",
+      "Estrategias para el aprendizaje"
+    ]
+  },
+  "Semestre II": {
+    año: "año1",
+    ramos: [
+      "Bioquímica general",
+      "Anatomía veterinaria I",
+      "Histología veterinaria",
+      "Zoología veterinaria",
+      "Bienestar Animal",
+      "Ingles instrumental I"
+    ]
+  },
+  "Semestre III": {
+    año: "año2",
+    ramos: [
+      "Antropología",
+      "Ecología",
+      "Fisiología animal",
+      "Anatomía veterinaria II",
+      "Microbiología",
+      "Inmunología veterinaria",
+      "Genética ganadera",
+      "Ingles instrumental II"
+    ]
+  },
+  "Semestre IV": {
+    año: "año2",
+    ramos: [
+      "Ética",
+      "Producción de forrajes",
+      "Fisiopatología",
+      "Reproducción animal",
+      "Enfermedades parasitarias",
+      "Enfermedades infecciosas",
+      "Patología general"
+    ]
+  },
+  "Semestre V": {
+    año: "año3",
+    ramos: [
+      "Filosofía de la economía",
+      "Nutrición y alimentación animal",
+      "Patología especial de sistemas",
+      "Farmacología veterinaria I",
+      "Andrología",
+      "Sistemas de producción de carne",
+      "Economía"
+    ]
+  },
+  "Semestre VI": {
+    año: "año3",
+    ramos: [
+      "Cirugía general",
+      "Farmacología veterinaria II",
+      "Sistemas de producción de leche",
+      "Tecnología de la carne",
+      "Ginecología y obstetricia",
+      "Contabilidad y administración"
+    ]
+  },
+  "Semestre VII": {
+    año: "año4",
+    ramos: [
+      "Cirugía especial",
+      "Exploración clínica de los animales",
+      "Análisis estadístico",
+      "Sistemas de producción de peces",
+      "Tecnología de la leche",
+      "Conservación de la vida silvestre"
+    ]
+  },
+  "Semestre VIII": {
+    año: "año4",
+    ramos: [
+      "Toxicología veterinaria",
+      "Métodos complementarios de diagnóstico",
+      "Medicina interna",
+      "Metodología de la investigación científica",
+      "Epidemiologia y salud publica",
+      "Formulación y evaluación de proyectos"
+    ]
+  },
+  "Semestre IX": {
+    año: "año5",
+    ramos: [
+      "Clínica de animales silvestres y exóticos",
+      "Clínica de equinos y rumiantes",
+      "Clínica de animales de compañía",
+      "Legislación y deontología",
+      "Memoria de título",
+      "Inocuidad de los alimentos"
+    ]
+  },
+  "Semestre X": {
+    año: "año5",
+    ramos: [
+      "Electivo",
+      "Internado"
+    ]
+  }
+};
 
+const requisitos = {
+  "Bioquímica general": ["Biología celular", "Química general y orgánica"],
+  "Anatomía veterinaria I": ["Biología celular"],
+  "Histología veterinaria": ["Biología celular"],
+  "Genética ganadera": ["Biología celular", "Matemáticas"],
+  "Fisiología animal": ["Bioquímica general", "Histología veterinaria", "Bienestar Animal"],
+  "Microbiología": ["Bioquímica general"],
+  "Anatomía veterinaria II": ["Anatomía veterinaria I"],
+  "Inmunología veterinaria": ["Histología veterinaria", "Bienestar Animal"],
+  "Ecología": ["Zoología veterinaria"],
+  "Enfermedades parasitarias": ["Zoología veterinaria"],
+  "Ingles instrumental II": ["Ingles instrumental I"],
+  "Ética": ["Antropología"],
+  "Producción de forrajes": ["Ecología"],
+  "Conservación de la vida silvestre": ["Ecología"],
+  "Sistemas de producción de carne": ["Bienestar Animal", "Producción de forrajes", "Genética ganadera", "Reproducción animal"],
+  "Reproducción animal": ["Fisiología animal", "Anatomía veterinaria II"],
+  "Fisiopatología": ["Fisiología animal", "Inmunología veterinaria", "Anatomía veterinaria II"],
+  "Enfermedades infecciosas": ["Fisiología animal", "Microbiología", "Inmunología veterinaria"],
+  "Patología general": ["Fisiología animal", "Anatomía veterinaria II"],
+  "Nutrición y alimentación animal": ["Producción de forrajes"],
+  "Economía": ["Producción de forrajes", "Matemáticas"],
+  "Farmacología veterinaria I": ["Fisiopatología", "Enfermedades infecciosas"],
+  "Andrología": ["Fisiopatología", "Reproducción animal"],
+  "Patología especial de sistemas": ["Patología general"],
+  "Sistemas de producción de leche": ["Genética ganadera", "Reproducción animal", "Nutrición y alimentación animal"],
+  "Sistema de producción de peces": ["Reproducción animal", "Nutrición y alimentación animal"],
+  "Tecnología de la carne": ["Sistemas de producción de carne"],
+  "Cirugía general": ["Farmacología veterinaria I", "Patología especial de sistemas"],
+  "Farmacología veterinaria II": ["Farmacología veterinaria I", "Enfermedades parasitarias"],
+  "Ginecología y obstetricia": ["Andrología"],
+  "Contabilidad y administración": ["Economía"],
+  "Cirugía especial": ["Cirugía general", "Farmacología veterinaria II"],
+  "Exploración clínica de los animales": ["Patología especial de sistemas", "Ginecología y obstetricia"],
+  "Análisis estadístico": ["Contabilidad y administración"],
+  "Tecnología de la leche": ["Sistemas de producción de leche", "Tecnología de la carne"],
+  "Epidemiologia y salud publica": ["Análisis estadístico", "Enfermedades infecciosas"],
+  "Metodología de la investigación científica": ["Análisis estadístico"],
+  "Inocuidad de los alimentos": ["Tecnología de la leche", "Toxicología veterinaria", "Métodos complementarios de diagnóstico", "Epidemiologia y salud publica"],
+  "Clínica de animales silvestres y exóticos": ["Toxicología veterinaria", "Métodos complementarios de diagnóstico", "Conservación de la vida silvestre"],
+  "Clínica de equinos y rumiantes": ["Toxicología veterinaria", "Métodos complementarios de diagnóstico"],
+  "Clínica de animales de compañía": ["Toxicología veterinaria", "Métodos complementarios de diagnóstico"],
+  "Electivo": ["Clínica de animales silvestres y exóticos", "Clínica de equinos y rumiantes", "Clínica de animales de compañía"],
+  "Memoria de título": ["Cirugía especial", "Medicina interna", "Epidemiologia y salud publica", "Formulación y evaluación de proyectos"]
+};
+
+const estado = {};
+
+function crearRamo(nombre, añoClase) {
+  const div = document.createElement('div');
+  div.classList.add('ramo', añoClase);
+  div.textContent = nombre;
+  div.dataset.nombre = nombre;
+  div.addEventListener('click', () => {
+    if (puedeActivarse(nombre)) {
+      estado[nombre] = !estado[nombre];
+      actualizarMalla();
+    }
+  });
+  return div;
+}
+
+function puedeActivarse(nombre) {
+  const reqs = requisitos[nombre] || [];
+  return reqs.every(r => estado[r]);
+}
+
+function actualizarMalla() {
+  document.querySelectorAll('.ramo').forEach(div => {
+    const nombre = div.dataset.nombre;
+    if (estado[nombre]) {
+      div.classList.add('activo');
+      div.classList.remove('bloqueado');
+    } else if (!puedeActivarse(nombre)) {
+      div.classList.remove('activo');
+      div.classList.add('bloqueado');
+    } else {
+      div.classList.remove('activo', 'bloqueado');
+    }
+  });
+}
+
+const contenedor = document.getElementById('malla');
+for (const [semestre, { año, ramos }] of Object.entries(ramosPorSemestre)) {
+  const divSemestre = document.createElement('div');
+  divSemestre.classList.add('semestre', año);
+
+  const h2 = document.createElement('h2');
+  h2.textContent = semestre;
+  divSemestre.appendChild(h2);
+
+  for (const ramo of ramos) {
+    estado[ramo] = false;
+    const el = crearRamo(ramo, año);
+    divSemestre.appendChild(el);
+  }
+
+  contenedor.appendChild(divSemestre);
+}
+
+actualizarMalla();
