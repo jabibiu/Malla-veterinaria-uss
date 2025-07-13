@@ -6,7 +6,7 @@
     <title>Malla Curricular Veterinaria USS</title>
     <style>
         :root {
-            --primary: #f06292;
+            --primary: #e91e63;
             --primary-light: #f8bbd0;
             --primary-dark: #c2185b;
             --secondary: #f48fb1;
@@ -48,9 +48,6 @@
             color: white;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 10px;
-            z-index: 100;
         }
         
         header h1 {
@@ -58,49 +55,11 @@
             margin-bottom: 10px;
         }
         
-        header p {
-            font-size: 1.1rem;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .instructions {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            position: sticky;
-            top: 120px;
-            z-index: 90;
-        }
-        
-        .instructions h2 {
-            color: var(--primary-dark);
-            margin-bottom: 10px;
-        }
-        
-        .instructions ul {
-            padding-left: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        
-        .instructions li {
-            margin-bottom: 8px;
-            flex: 1;
-            min-width: 200px;
-        }
-        
         .controls {
             display: flex;
             justify-content: center;
             gap: 15px;
             margin-bottom: 25px;
-            position: sticky;
-            top: 230px;
-            z-index: 80;
         }
         
         button {
@@ -118,34 +77,6 @@
         button:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
-        }
-        
-        .progress-container {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            position: sticky;
-            top: 280px;
-            z-index: 70;
-        }
-        
-        .progress-bar {
-            height: 20px;
-            background: #e0e0e0;
-            border-radius: 10px;
-            margin: 10px 0;
-            overflow: hidden;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary-light), var(--primary));
-            border-radius: 10px;
-            width: 0%;
-            transition: width 0.5s ease;
         }
         
         .curriculum {
@@ -278,8 +209,6 @@
             padding: 15px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            position: sticky;
-            bottom: 20px;
         }
         
         .legend-item {
@@ -346,20 +275,11 @@
         <header>
             <h1>📚 Malla Curricular Veterinaria USS</h1>
         </header>
-            </ul>
-        </div>
         
         <div class="controls">
             <button id="resetBtn">↺ Reiniciar Todo</button>
             <button id="approveAllBtn">✓ Aprobar Todos</button>
             <button id="unapproveAllBtn">✗ Desaprobar Todos</button>
-        </div>
-        
-        <div class="progress-container">
-            <h3>Progreso Académico: <span id="progressText">0%</span></h3>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
         </div>
         
         <div class="curriculum" id="curriculum">
@@ -382,7 +302,7 @@
         </div>
         
         <footer>
-            <p>Malla Curricular Interactiva - Carrera de Veterinaria | Diseñado con 💖</p>
+            <p>Malla Curricular Interactiva - Carrera de Veterinaria USS | Diseñado con 💖</p>
         </footer>
     </div>
 
@@ -523,24 +443,39 @@
                     {
                         id: "X",
                         courses: [
-                            { id: "electivo", name: "Electivo", requirements: ["clinica_silvestres", "clinica_equinos", "clinica_compania"], opens: [] },
-                            { id: "internado", name: "Internado", requirements: ["clinica_silvestres", "clinica_equinos", "clinica_compania"], opens: [] }
+                            { id: "electivo", name: "Electivo", requirements: ["clinica_silvestres", "clinica_equinos", "clinica_compania", "legislacion", "memoria_titulo", "inocuidad_alimentos"], opens: [] },
+                            { id: "internado", name: "Internado", requirements: ["clinica_silvestres", "clinica_equinos", "clinica_compania", "legislacion", "memoria_titulo", "inocuidad_alimentos"], opens: [] }
                         ]
                     }
                 ]
             }
         ];
 
+        // Obtener todos los IDs de cursos hasta el semestre VIII
+        let allIdsUpToVIII = [];
+        curriculumData.forEach(year => {
+            year.semesters.forEach(semester => {
+                // Solo incluir cursos hasta el semestre VIII
+                if (semester.id !== "IX" && semester.id !== "X") {
+                    semester.courses.forEach(course => {
+                        allIdsUpToVIII.push(course.id);
+                    });
+                }
+            });
+        });
+
+        // Actualizar requisitos de Memoria de Título
+        const memoriaTitulo = curriculumData[4].semesters[0].courses.find(c => c.id === "memoria_titulo");
+        if (memoriaTitulo) {
+            memoriaTitulo.requirements = allIdsUpToVIII;
+        }
+
         // Estado de la aplicación
         let approvedCourses = new Set();
-        const totalCourses = curriculumData.reduce((total, year) => {
-            return total + year.semesters.reduce((sum, semester) => sum + semester.courses.length, 0);
-        }, 0);
 
         // Inicializar la aplicación
         document.addEventListener('DOMContentLoaded', () => {
             initCurriculum();
-            updateProgress();
             
             // Event listeners para los botones de control
             document.getElementById('resetBtn').addEventListener('click', resetAllCourses);
@@ -553,7 +488,6 @@
                 const state = JSON.parse(savedState);
                 approvedCourses = new Set(state.approvedCourses);
                 updateCurriculumDisplay();
-                updateProgress();
             }
         });
 
@@ -669,7 +603,6 @@
             }
             
             updateCurriculumDisplay();
-            updateProgress();
             saveState();
         }
 
@@ -678,7 +611,6 @@
             if (confirm('¿Estás seguro de que quieres reiniciar todo el progreso?')) {
                 approvedCourses.clear();
                 updateCurriculumDisplay();
-                updateProgress();
                 saveState();
             }
         }
@@ -693,7 +625,6 @@
                 });
             });
             updateCurriculumDisplay();
-            updateProgress();
             saveState();
         }
 
@@ -702,19 +633,8 @@
             if (confirm('¿Estás seguro de que quieres marcar todos los cursos como no aprobados?')) {
                 approvedCourses.clear();
                 updateCurriculumDisplay();
-                updateProgress();
                 saveState();
             }
-        }
-
-        // Actualizar la barra de progreso
-        function updateProgress() {
-            const progress = (approvedCourses.size / totalCourses) * 100;
-            const progressText = document.getElementById('progressText');
-            const progressFill = document.getElementById('progressFill');
-            
-            progressText.textContent = `${Math.round(progress)}%`;
-            progressFill.style.width = `${progress}%`;
         }
 
         // Guardar el estado actual
