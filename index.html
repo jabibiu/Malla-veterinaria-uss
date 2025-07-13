@@ -1,1 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Malla Veterinaria USS</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <h1>Malla Medicina Veterinaria - USS</h1>
+  <div id="malla"></div>
 
+  <script>
+    const ramos = {
+      "Biología celular": ["Bioquímica general", "Anatomía veterinaria I", "Histología veterinaria", "Genética ganadera"],
+      "Química general y orgánica": ["Bioquímica general"],
+      "Física médica": ["Métodos complementarios de diagnóstico"],
+      "Matemáticas": ["Genética ganadera", "Economía"],
+      "Orientación profesional": ["Bienestar Animal"],
+      "Estrategias para el aprendizaje": [],
+      "Bioquímica general": ["Fisiología animal", "Microbiología"],
+      "Anatomía veterinaria I": ["Anatomía veterinaria II"],
+      "Histología veterinaria": ["Fisiología animal", "Inmunología veterinaria"],
+      "Zoología veterinaria": ["Ecología", "Enfermedades parasitarias"],
+      "Bienestar Animal": ["Fisiología animal", "Inmunología veterinaria", "Sistemas de producción de carne"],
+      "Ingles instrumental I": ["Ingles instrumental II"],
+      "Antropología": ["Ética"],
+      "Ecología": ["Producción de forrajes", "Conservación de la vida silvestre"],
+      "Fisiología animal": ["Fisiopatología", "Reproducción animal", "Enfermedades infecciosas", "Patología general"],
+      "Anatomía veterinaria II": ["Fisiopatología", "Reproducción animal", "Patología general"],
+      "Microbiología": ["Enfermedades infecciosas"],
+      "Inmunología veterinaria": ["Fisiopatología", "Enfermedades infecciosas"],
+      "Genética ganadera": ["Sistemas de producción de carne", "Sistemas de producción de leche"],
+      "Ética": ["Filosofía de la economía"],
+      "Producción de forrajes": ["Nutrición y alimentación animal", "Sistemas de producción de carne", "Economía"],
+      "Fisiopatología": ["Farmacología veterinaria I", "Andrología"],
+      "Reproducción animal": ["Andrología", "Sistemas de producción de carne", "Sistemas de producción de leche", "Sistemas de producción de peces"],
+      "Enfermedades parasitarias": ["Farmacología veterinaria II"],
+      "Enfermedades infecciosas": ["Farmacología veterinaria I", "Epidemiologia y salud publica"],
+      "Patología general": ["Patología especial de sistemas"],
+      "Nutrición y alimentación animal": ["Sistemas de producción de leche", "Sistemas de producción de peces"],
+      "Patología especial de sistemas": ["Cirugía general", "Exploración clínica de los animales"],
+      "Farmacología veterinaria I": ["Cirugía general", "Farmacología veterinaria II"],
+      "Andrología": ["Ginecología y obstetricia"],
+      "Sistemas de producción de carne": ["Tecnología de la carne"],
+      "Economía": ["Contabilidad y administración"],
+      "Cirugía general": ["Cirugía especial"],
+      "Farmacología veterinaria II": ["Cirugía especial", "Toxicología veterinaria"],
+      "Sistemas de producción de leche": ["Tecnología de la leche"],
+      "Tecnología de la carne": ["Tecnología de la leche"],
+      "Ginecología y obstetricia": ["Exploración clínica de los animales"],
+      "Contabilidad y administración": ["Análisis estadístico", "Formulación y evaluación de proyectos"],
+      "Cirugía especial": ["Medicina interna"],
+      "Exploración clínica de los animales": ["Métodos complementarios de diagnóstico", "Medicina interna"],
+      "Análisis estadístico": ["Metodología de la investigación científica", "Epidemiologia y salud publica"],
+      "Tecnología de la leche": ["Inocuidad de los alimentos"],
+      "Conservación de la vida silvestre": ["Clínica de animales silvestres y exóticos"],
+      "Toxicología veterinaria": ["Clínica de animales silvestres y exóticos", "Clínica de equinos y rumiantes", "Clínica de animales de compañía", "Inocuidad de los alimentos"],
+      "Métodos complementarios de diagnóstico": ["Clínica de animales silvestres y exóticos", "Clínica de equinos y rumiantes", "Clínica de animales de compañía", "Inocuidad de los alimentos"],
+      "Epidemiologia y salud publica": ["Inocuidad de los alimentos"],
+      "Clínica de animales silvestres y exóticos": ["Electivo"],
+      "Clínica de equinos y rumiantes": ["Electivo"],
+      "Clínica de animales de compañía": ["Electivo"],
+      "Memoria de título": []
+    };
+
+    const malla = document.getElementById('malla');
+    const estado = {};
+
+    function crearRamo(nombre) {
+      const div = document.createElement('div');
+      div.classList.add('ramo');
+      div.textContent = nombre;
+      div.dataset.nombre = nombre;
+      div.addEventListener('click', () => {
+        if (puedeActivarse(nombre)) {
+          div.classList.toggle('activo');
+          estado[nombre] = !estado[nombre];
+          actualizarMalla();
+        }
+      });
+      return div;
+    }
+
+    function puedeActivarse(ramo) {
+      const requisitos = Object.entries(ramos).filter(([k, v]) => v.includes(ramo)).map(([k]) => k);
+      return requisitos.every(r => estado[r]);
+    }
+
+    function actualizarMalla() {
+      document.querySelectorAll('.ramo').forEach(div => {
+        const nombre = div.dataset.nombre;
+        if (puedeActivarse(nombre) || estado[nombre]) {
+          div.classList.remove('bloqueado');
+        } else {
+          div.classList.add('bloqueado');
+        }
+      });
+    }
+
+    Object.keys(ramos).forEach(nombre => {
+      estado[nombre] = false;
+      const div = crearRamo(nombre);
+      div.classList.add('bloqueado');
+      malla.appendChild(div);
+    });
+
+    actualizarMalla();
+  </script>
+</body>
+</html>
